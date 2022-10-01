@@ -5,10 +5,6 @@
  * 1. Introduction to Java helpful.
  */
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-
 public abstract class Bag {
     /*
      * TODO: Create the following private instance variables
@@ -80,13 +76,24 @@ public abstract class Bag {
      *       This method should return true if the item was added
      *       and false otherwise.
      */
-    public void addItem(String item){
+    public boolean addItem(String item){
         if (this.numberOfContents < this.capacity){
             this.numberOfContents += 1;
-            ArrayList<String> temp = new ArrayList<String>(Arrays.<String>asList(this.contents));
-            temp.add(item);
 
-            this.contents = temp.toArray(new String[0]);
+            if (this.numberOfContents == 1){
+                this.contents = new String[]{item};
+            }
+            else {
+                String[] temp = new String[this.numberOfContents];
+                System.arraycopy(this.contents, 0, temp, 0, this.contents.length);
+                temp[this.contents.length] = item;
+
+                this.contents = temp;
+            }
+            return true;
+        }
+        else {
+            return false;
         }
     }
 
@@ -105,15 +112,18 @@ public abstract class Bag {
         if (this.numberOfContents == 0) {
             return null;
         }
-        this.numberOfContents -= 1;
-        ArrayList<String> temp = new ArrayList<String>(Arrays.<String>asList(this.contents));
-        String item = temp.get(-1);
+        else {
+            this.numberOfContents -= 1;
 
-        temp.remove(item);
+            String item = this.contents[this.contents.length - 1];
 
-        this.contents = temp.toArray(new String[0]);
+            String[] temp = new String[this.numberOfContents];
+            System.arraycopy(this.contents, 0, temp, 0, this.numberOfContents);
 
-        return item;
+            this.contents = temp;
+
+            return item;
+        }
     }
 
 
